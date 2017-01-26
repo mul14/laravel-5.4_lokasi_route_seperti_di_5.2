@@ -6,24 +6,23 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
-class RegisterController extends Controller
+class AuthController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | Register Controller
+    | Authentication Controller
     |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
     */
 
-    use RegistersUsers;
+    use AuthenticatesUsers, RegistersUsers {
+        AuthenticatesUsers::guard insteadof RegistersUsers;
+        AuthenticatesUsers::redirectPath insteadof RegistersUsers;
+    }
 
     /**
-     * Where to redirect users after registration.
+     * Where to redirect users after login and registration.
      *
      * @var string
      */
@@ -36,7 +35,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('guest', ['except' => 'logout']);
     }
 
     /**
